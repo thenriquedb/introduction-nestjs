@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  database:
+    image: mysql:latest
+    container_name: db_nestjs
+    environment:
+      - MYSQL_DATABASE=nestjs
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 3006:3006

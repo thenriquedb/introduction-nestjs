@@ -7,4 +7,4 @@ services:
       - MYSQL_DATABASE=nestjs
       - MYSQL_ROOT_PASSWORD=root
     ports:
-      - 3006:3006
+      - 3306:3306

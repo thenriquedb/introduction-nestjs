@@ -1,12 +1,28 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CheckoutModule } from './checkout/checkout.module';
 import { CheckoutsModule } from './checkouts/checkouts.module';
+import { Checkout } from './checkouts/entities/checkout.entity';
+import { CheckoutItem } from './checkouts/entities/checkout-item.entity';
+import { CheckoutProduct } from './checkouts/entities/checkout-product.entity';
 
 @Module({
-  imports: [CheckoutModule, CheckoutsModule],
+  imports: [
+    CheckoutsModule,
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: 'root',
+      database: 'nestjs',
+      entities: [Checkout, CheckoutItem, CheckoutProduct],
+      synchronize: true,
+      logging: true
+    })
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

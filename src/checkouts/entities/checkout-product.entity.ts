@@ -14,6 +14,7 @@ export class CheckoutProduct {
   @Column()
   image_url: string;
 
+  @Column()
   product_id: number; // id do produto em outro microserviço
 
   @CreateDateColumn()

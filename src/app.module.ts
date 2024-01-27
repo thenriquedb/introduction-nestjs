@@ -6,6 +6,8 @@ import { CheckoutsModule } from './checkouts/checkouts.module';
 import { Checkout } from './checkouts/entities/checkout.entity';
 import { CheckoutItem } from './checkouts/entities/checkout-item.entity';
 import { CheckoutProduct } from './checkouts/entities/checkout-product.entity';
+import { RabbitMQModule } from './rabbitmq/rabbitmq.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -19,8 +21,9 @@ import { CheckoutProduct } from './checkouts/entities/checkout-product.entity';
       database: 'nestjs',
       entities: [Checkout, CheckoutItem, CheckoutProduct],
       synchronize: true,
-      logging: true
-    })
+    }),
+    RabbitMQModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,8 +1,9 @@
-import { Injectable, Post } from '@nestjs/common';
+import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateCheckoutDto } from './dto/create-checkout.dto';
 import { Checkout } from './entities/checkout.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 
 const PRODUCTS_LIST = [
   {
@@ -49,7 +50,10 @@ const PRODUCTS_LIST = [
 
 @Injectable()
 export class CheckoutsService {
-  constructor(@InjectRepository(Checkout) private checkoutRepository: Repository<Checkout>) { }
+  constructor(
+    @InjectRepository(Checkout) private checkoutRepository: Repository<Checkout>,
+    private amqpConnection: AmqpConnection,
+  ) { }
 
   async create(createCheckoutDto: CreateCheckoutDto) {
     const productsIds = PRODUCTS_LIST.map(product => product.id)
@@ -72,6 +76,11 @@ export class CheckoutsService {
     });
 
     await this.checkoutRepository.save(checkout);
+
+    await this.amqpConnection.publish('amq.direct', 'checkout.created', {
+      checkout_id: checkout.id,
+      total: checkout.total,
+    });
 
     return checkout;
   }
